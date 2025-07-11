@@ -84,6 +84,7 @@ END_MESSAGE_MAP()
 BOOL CBaseConverterDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
+	SetWindowText(L"Base Converter");
 
 	// Add "About..." menu item to system menu.
 
@@ -240,7 +241,9 @@ void CBaseConverterDlg::OnEnChangeEdit2()
 											binaryResult += ((value >> i) & 1) ? L'1' : L'0';
 										}
 										binaryResult += L" ";
+
 				}
+									
 				m_StaticText.SetWindowTextW(binaryResult.c_str());
         }
 
@@ -329,6 +332,7 @@ void CBaseConverterDlg::OnEnChangeEdit2()
 					}
 
 					AfxMessageBox(L"Input is not a valid hexadecimal, binary, or decimal value.");
+
     }
 
 	
@@ -447,6 +451,26 @@ void CBaseConverterDlg::DecimalConvert()
         m_StaticText.SetWindowTextW(decimalResult);
         return;
     }
+
+	bool isHex = true;
+	for (int i = 0; i < InputText.GetLength(); ++i)
+	{
+		wchar_t ch = InputText[i];
+		if (!((ch >= L'0' && ch <= L'9') || (ch >= L'A' && ch <= L'F') || (ch >= L'a' && ch <= L'f')))
+		{
+			isHex = false;
+			break;
+		}
+	}
+	if (isHex)
+	{
+		unsigned long decimalValue = std::stoul(InputText.GetString(), nullptr, 16);
+		CString decimalResult;
+		decimalResult.Format(L"%lu", decimalValue);
+		m_StaticText.SetWindowTextW(decimalResult);
+		return;
+	}
+
 }
 
 
@@ -538,6 +562,30 @@ void CBaseConverterDlg::Base62Convert()
 	}
 	CString result(base62Result.c_str());
 	m_StaticText.SetWindowTextW(result);
+
+
+	bool isBinary = true;
+	for (int i = 0; i < inputText.GetLength(); ++i)
+	{
+		if (inputText[i] != L'0' && inputText[i] != L'1')
+		{
+			isBinary = false;
+			break;
+		}
+	}
+	if (isBinary && (inputText.GetLength() == 8 || inputText.GetLength() == 4))
+	{
+		unsigned long decimalValue = 0;
+		for (int i = 0; i < inputText.GetLength(); ++i)
+		{
+			decimalValue = (decimalValue << 1) | (inputText[i] - L'0');
+		}
+		CString decimalResult;
+		decimalResult.Format(L"%lu", decimalValue);
+		m_StaticText.SetWindowTextW(decimalResult);
+		return;
+	}
+
 
 
 }
