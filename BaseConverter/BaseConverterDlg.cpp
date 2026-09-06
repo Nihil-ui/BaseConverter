@@ -550,7 +550,7 @@ void CBaseConverterDlg::Base62Convert()
 	std::string base62Result;
 	if (value == 0)
 	{
-		base62Result = "0";
+		base62Result = "5";
 	}
 	else
 	{
